@@ -1,0 +1,117 @@
+### Шаг 1: Класс Card
+
+Класс `Card` будет представлять отдельную карту с мастью и значением.
+
+```java
+public class Card {
+    private String suit; // Масть
+    private String rank; // Значение (ранг)
+
+    public Card(String suit, String rank) {
+        this.suit = suit;
+        this.rank = rank;
+    }
+
+    public String getSuit() {
+        return suit;
+    }
+
+    public String getRank() {
+        return rank;
+    }
+
+    @Override
+    public String toString() {
+        return rank + " of " + suit;
+    }
+}
+```
+
+### Шаг 2: Класс Deck
+
+Класс `Deck` будет содержать методы для создания колоды, перетасовки, сдачи карт и возвращения карт в колоду.
+
+```java
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class Deck {
+    private List<Card> cards; // Список карт в колоде
+
+    public Deck() {
+        this.cards = new ArrayList<>();
+        String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
+        String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
+
+        // Создание колоды
+        for (String suit : suits) {
+            for (String rank : ranks) {
+                cards.add(new Card(suit, rank));
+            }
+        }
+    }
+
+    // Метод для перетасовки колоды
+    public void shuffle() {
+        Collections.shuffle(cards);
+    }
+
+    // Метод для сдачи карты
+    public Card dealCard() {
+        if (cards.isEmpty()) {
+            return null; // Если колода пуста
+        }
+        return cards.remove(cards.size() - 1); // Убираем последнюю карту из колоды
+    }
+
+    // Метод для возвращения карты в колоду
+    public void returnCard(Card card) {
+        if (!cards.contains(card)) {
+            cards.add(card); // Добавляем карту, если её нет в колоде
+        }
+    }
+
+    // Метод для получения количества оставшихся карт в колоде
+    public int remainingCards() {
+        return cards.size();
+    }
+
+    // Метод для вывода карт в колоде
+    public void printDeck() {
+        for (Card card : cards) {
+            System.out.println(card);
+        }
+    }
+}
+```
+
+### Шаг 3: Класс Main
+
+Класс `Main` будет демонстрировать использование колоды карт.
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        Deck deck = new Deck(); // Создаем новую колоду
+        deck.shuffle(); // Перетасовываем колоду
+
+        // Сдача нескольких карт
+        System.out.println("Сданные карты:");
+        for (int i = 0; i < 5; i++) {
+            Card dealtCard = deck.dealCard();
+            System.out.println(dealtCard);
+        }
+
+        // Вывод оставшихся карт в колоде
+        System.out.println("\nОставшиеся карты в колоде: " + deck.remainingCards());
+
+        // Возвращение карты в колоду
+        Card returnedCard = new Card("Hearts", "Ace");
+        deck.returnCard(returnedCard);
+        System.out.println("\nВозвращаемая карта: " + returnedCard);
+
+        // Проверка оставшихся карт после возвращения
+        System.out.println("Оставшиеся карты в колоде: " + deck.remainingCards());
+    }
+}
